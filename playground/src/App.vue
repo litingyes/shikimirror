@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { HighlighterCore } from '@shikijs/core'
-import { createHighlighterCore } from '@shikijs/core'
-import { createOnigurumaEngine } from '@shikijs/engine-oniguruma'
+import type { HighlighterCore } from 'shiki/core'
+import { createHighlighterCore } from 'shiki/core'
+import {createOnigurumaEngine} from 'shiki/engine-oniguruma.mjs'
 import { grammars, injections } from 'tm-grammars'
 import { themes } from 'tm-themes'
 import Badge from './Badge.vue'

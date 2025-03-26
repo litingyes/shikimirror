@@ -1,0 +1,22 @@
+{
+  "name": "@shikimirror/themes",
+  "type": "module",
+  "version": "0.0.0",
+  "private": false,
+  "description": "Themes collection for shikimirror",
+  "license": "MIT",
+  "homepage": "https://github.com/litingyes/shikimirror#readme",
+  "bugs": {
+    "url": "https://github.com/litingyes/shikimirror/issues"
+  },
+  "keywords": [
+    "shiki",
+    "codemirror"
+  ],
+  "peerDependencies": {
+    "@codemirror/view": "^6"
+  },
+  "devDependencies": {
+    "shiki": "catalog:"
+  }
+}

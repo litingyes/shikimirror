@@ -2,6 +2,7 @@ packages:
   - playground
   - packages/*
 catalog:
+  shiki: 3.2.1
   tm-grammars: ^1.23.6
   tm-themes: ^1.10.2
   vite: ^6.1.1
