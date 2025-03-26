@@ -1,0 +1,16 @@
+{
+  "name": "shikimirror",
+  "type": "module",
+  "version": "0.0.0",
+  "private": false,
+  "description": "Integrate Shiki into CodeMirror",
+  "license": "MIT",
+  "homepage": "https://github.com/litingyes/shikimirror#readme",
+  "bugs": {
+    "url": "https://github.com/litingyes/shikimirror/issues"
+  },
+  "keywords": [
+    "shiki",
+    "codemirror"
+  ]
+}

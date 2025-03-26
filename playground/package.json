@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@shikijs/core": "^3.2.1",
-    "@shikijs/engine-javascript": "^3.2.1",
     "@shikijs/engine-oniguruma": "^3.2.1",
     "@vueuse/core": "^13.0.0",
     "tm-grammars": "catalog:",

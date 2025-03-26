@@ -7,7 +7,7 @@ import VueMacros from 'unplugin-vue-macros/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
 import VueRouter from 'unplugin-vue-router/vite'
 import { defineConfig } from 'vite'
-import pkg from './package.json'
+import shikimirrorPkgInfo from '../packages/shikimirror/package.json'
 
 export default defineConfig({
   resolve: {
@@ -16,7 +16,7 @@ export default defineConfig({
     },
   },
   define: {
-    __VERSION__: JSON.stringify(pkg.dependencies['@shikijs/core'].replace('^', '')),
+    __VERSION__: JSON.stringify(shikimirrorPkgInfo.version),
   },
   plugins: [
     VueMacros({

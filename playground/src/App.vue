@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import type { HighlighterCore } from '@shikijs/core'
 import { createHighlighterCore } from '@shikijs/core'
-import { createJavaScriptRegexEngine } from '@shikijs/engine-javascript'
 import { createOnigurumaEngine } from '@shikijs/engine-oniguruma'
 import { grammars, injections } from 'tm-grammars'
 import { themes } from 'tm-themes'
 import Badge from './Badge.vue'
-import SegmentControl from './SegmentControl.vue'
-import { engine, engineJsForgiving, grammar, isDark, theme } from './state'
+import { grammar, isDark, theme } from './state'
 
 const embedded = ref<string[]>([])
 const error = ref<any>(null)
@@ -23,9 +21,6 @@ const example = ref('')
 const isFetching = ref(false)
 const duration = ref(0)
 
-const jsEngine = computed(() => createJavaScriptRegexEngine({
-  forgiving: engineJsForgiving.value,
-}))
 const wasmEngine = createOnigurumaEngine(() => import('@shikijs/engine-oniguruma/wasm-inlined'))
 
 const filteredGrammars = computed(() => {
@@ -96,7 +91,7 @@ async function run(fetchInput = true) {
         themeObject,
       ],
       langs: await Promise.all(Array.from(langs.values())),
-      engine: engine.value === 'js' ? jsEngine.value : wasmEngine,
+      engine: wasmEngine,
     })
 
     highlight()
@@ -169,7 +164,7 @@ function share() {
 }
 
 watch(
-  [theme, grammar, engine, engineJsForgiving],
+  [theme, grammar],
   (n, o) => {
     params.theme = theme.value
     params.grammar = grammar.value
@@ -209,25 +204,10 @@ if (import.meta.hot) {
   <div h-100vh w-full grid="~ rows-[max-content_1fr]">
     <div flex="~ items-center gap-2" px4 pt-4>
       <a href="https://github.com/shikijs/textmate-grammars-themes" target="_blank" text-lg hover="text-primary">
-        Shiki TextMate Grammar & Theme Playground
+       Shikimirror with CodeMirror Playground
       </a>
-      <Badge :text="`Shiki v${version}`" text-sm :color="160" />
+      <Badge :text="`shikimirror v${version}`" text-sm :color="160" />
       <div flex-auto />
-      <label
-        v-if="engine === 'js'"
-        for="js-forgiving" op50 flex="~ items-center gap-1" border="~ base rounded" px1.5 py0.5
-        title="Forgiving errors in JavaScript engine" select-none mr1
-      >
-        <input id="js-forgiving" v-model="engineJsForgiving" type="checkbox">
-        <span text-sm>Forgiving</span>
-      </label>
-      <SegmentControl
-        v-model:model-value="engine"
-        :options="[
-          { label: 'Oniguruma', value: 'wasm' },
-          { label: 'JavaScript', value: 'js' },
-        ]"
-      />
       <a border="~ base rounded" p2 hover="bg-active" href="https://github.com/shikijs/textmate-grammars-themes" target="_blank">
         <div i-carbon-logo-github />
       </a>
