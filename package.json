@@ -1,44 +1,25 @@
 {
-  "name": "@litingyes/typescript-starter",
+  "name": "@shikimirror/monorepo",
   "type": "module",
-  "version": "0.1.0",
-  "private": false,
+  "version": "0.0.0",
+  "private": true,
   "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b",
-  "description": "A typescript project startup template",
+  "description": "Integrate Shiki into CodeMirror",
   "author": "litingyes <luz.liting@gmail.com> (https://litingyes.top/)",
   "license": "MIT",
-  "homepage": "https://github.com/litingyes/typescript-starter#readme",
+  "homepage": "https://github.com/litingyes/shikimirror#readme",
   "bugs": {
-    "url": "https://github.com/litingyes/typescript-starter/issues"
+    "url": "https://github.com/litingyes/shikimirror/issues"
   },
   "keywords": [
-    "typescript",
-    "template",
-    "starter",
-    "vite",
-    "vitest"
-  ],
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
+    "shiki",
+    "codemirror"
   ],
   "scripts": {
     "lint": "eslint .",
     "format": "eslint --fix .",
-    "build": "vite build",
-    "test": "vitest",
-    "coverage": "vitest run --coverage",
     "commit": "git-cz",
-    "prerelease": "pnpm build && pnpm coverage",
-    "release": "bumpp",
+    "release": "bumpp -r",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -47,7 +28,6 @@
     "@commitlint/config-conventional": "^19.6.0",
     "@commitlint/cz-commitlint": "^19.6.1",
     "@types/node": "22",
-    "@vitest/coverage-v8": "3.0.6",
     "bumpp": "^9.10.2",
     "commitizen": "^4.3.1",
     "eslint": "^9.18.0",
@@ -58,8 +38,7 @@
     "typescript": "^5.7.3",
     "unplugin-external": "0.1.0-beta.3",
     "vite": "^6.1.1",
-    "vite-plugin-dts": "^4.5.0",
-    "vitest": "^3.0.6"
+    "vite-plugin-dts": "^4.5.0"
   },
   "config": {
     "commitizen": {

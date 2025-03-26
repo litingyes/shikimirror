@@ -5,6 +5,8 @@
     "changelogithub",
     "commitlint",
     "preid",
+    "shiki",
+    "shikimirror",
     "unplugin"
   ],
   // Disable the default formatter, use eslint instead
