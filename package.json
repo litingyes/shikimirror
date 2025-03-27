@@ -17,8 +17,8 @@
   ],
   "scripts": {
     "build": "pnpm -F shikimirror -F \"@shikimirror/*\" build",
-    "playground:dev": "pnpm -F @shikimirror/playground dev",
-    "playground:build": "pnpm -F @shikimirror/playground build",
+    "playground:dev": "pnpm -F playground dev",
+    "playground:build": "pnpm -F playground build",
     "lint": "eslint .",
     "format": "eslint --fix .",
     "commit": "git-cz",
