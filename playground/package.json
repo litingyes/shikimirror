@@ -1,5 +1,5 @@
 {
-  "name": "@shikimirror/playground",
+  "name": "playground",
   "type": "module",
   "private": true,
   "scripts": {

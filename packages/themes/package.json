@@ -13,10 +13,34 @@
     "shiki",
     "codemirror"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "jiti scripts/themes.ts && eslint --fix src/themes/*.ts",
+    "build": "vite build"
+  },
   "peerDependencies": {
+    "@codemirror/state": "^6",
     "@codemirror/view": "^6"
   },
   "devDependencies": {
-    "shiki": "catalog:"
+    "@types/fs-extra": "catalog:",
+    "destr": "catalog:",
+    "fs-extra": "catalog:",
+    "jiti": "catalog:",
+    "unplugin-external": "catalog:",
+    "usexx": "^0.1.0",
+    "vite": "catalog:",
+    "vite-plugin-dts": "catalog:"
   }
 }
