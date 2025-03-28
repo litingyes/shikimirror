@@ -1,9 +1,11 @@
 import { EditorView } from '@codemirror/view'
 
-export const minDarkTheme = EditorView.theme({
+export const minDark = EditorView.theme({
   '&': {
-    color: 'undefined',
-    backgroundColor: 'undefined',
+    color: '#888888',
+    backgroundColor: '#1f1f1f',
+  },
+  '& .cm-selectionBackground': {
   },
 }, {
   dark: true,

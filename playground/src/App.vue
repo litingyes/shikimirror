@@ -1,30 +1,52 @@
 <script setup lang="ts">
-import type { HighlighterCore } from 'shiki/core'
-import { createHighlighterCore } from 'shiki/core'
-import {createOnigurumaEngine} from 'shiki/engine-oniguruma.mjs'
-import { grammars, injections } from 'tm-grammars'
+import { grammars } from 'tm-grammars'
 import { themes } from 'tm-themes'
 import Badge from './Badge.vue'
-import { grammar, isDark, theme } from './state'
+import {language, isDark, theme} from './state';
+import { basicSetup } from "codemirror"
+import { EditorView } from "@codemirror/view"
+import { Compartment, Extension } from '@codemirror/state'
+import {camelCase} from 'usexx'
 
-const embedded = ref<string[]>([])
-const error = ref<any>(null)
 
 const copied = ref(false)
 const clipboard = useClipboard()
+
 const params = useUrlSearchParams('history')
-const searchInputGrammar = ref('')
+
+const searchInputLanguage = ref('')
 const searchInputTheme = ref('')
+
 const input = ref('')
-const output = ref('')
 const example = ref('')
+
+const themeConfig = new Compartment()
+
+const editorContainer = useTemplateRef('editorContainer')
+const editor = ref<EditorView>()
+onMounted(() => {
+  editor.value = new EditorView({
+    doc: input.value,
+    parent: editorContainer.value!,
+    extensions: [
+      basicSetup,
+      EditorView.updateListener.of((update) => {
+        if (!update.docChanged) {
+          return
+        }
+
+
+        input.value = update.state.doc.toString()
+      }),
+      themeConfig.of([])
+    ]
+  })
+})
+
 const isFetching = ref(false)
-const duration = ref(0)
 
-const wasmEngine = createOnigurumaEngine(() => import('@shikijs/engine-oniguruma/wasm-inlined'))
-
-const filteredGrammars = computed(() => {
-  const searchTerm = searchInputGrammar.value.trim().toLowerCase()
+const filteredLanguage = computed(() => {
+  const searchTerm = searchInputLanguage.value.trim().toLowerCase()
   return grammars.filter(g =>
     g.displayName.toLowerCase().includes(searchTerm),
   )
@@ -39,85 +61,47 @@ const filteredThemes = computed(() => {
 
 if (params.theme && themes.some(t => t.name === params.theme))
   theme.value = params.theme as string
-if (params.grammar && grammars.some(t => t.name === params.grammar))
-  grammar.value = params.grammar as string
+if (params.language && grammars.some(t => t.name === params.language))
+  language.value = params.language as string
 if (params.code?.length)
   input.value = params.code as string
 
-const grammarObject = computed(() => grammars.find(g => g.name === grammar.value))
-const themeObject = computed(() => themes.find(t => t.name === theme.value))
-
-let highlighter: HighlighterCore | null = null
 
 let fetchingTimer: ReturnType<typeof setTimeout> | undefined
 
 async function run(fetchInput = true) {
-  highlighter?.dispose()
-  highlighter = null
-  error.value = null
-  duration.value = 0
   if (fetchingTimer)
     clearTimeout(fetchingTimer)
   fetchingTimer = setTimeout(() => {
     isFetching.value = true
   }, 300)
+
   try {
-    const themeObject = await import(`../node_modules/tm-themes/themes/${theme.value}.json`).then(m => m.default)
-    const langs = new Map<string, any>()
-
-    if (fetchInput) {
-      const sample = await import(`../../samples/${grammar.value}.sample?raw`)
-        .then(m => m.default)
-        .catch(() => `// No sample available for ${grammar.value}`)
-      example.value = sample
-      input.value = sample
+    if (!fetchInput) {
+      return
     }
 
-    async function loadLangs(lang: string) {
-      if (langs.has(lang))
-        return langs.get(lang)
-      const info = grammars.find(g => g.name === lang) || injections.find(g => g.name === lang)
-      langs.set(lang, import(`../node_modules/tm-grammars/grammars/${lang}.json`).then(m => m.default))
-      info?.embedded?.forEach(loadLangs)
-      return langs.get(lang)
-    }
+    const sample = await import(`../../samples/${language.value}.sample?raw`)
+      .then(m => m.default)
+      .catch(() => `// No sample available for ${language.value}`)
+    example.value = sample
+    input.value = sample
 
-    loadLangs(grammar.value)
-
-    embedded.value = Array.from(langs.keys()).filter(l => l !== grammar.value)
-
-    highlighter = await createHighlighterCore({
-      themes: [
-        themeObject,
-      ],
-      langs: await Promise.all(Array.from(langs.values())),
-      engine: wasmEngine,
+    editor.value?.dispatch({
+      changes: {
+        from: 0,
+        to: editor.value.state.doc.length,
+        insert: sample
+      }
     })
-
-    highlight()
   }
   catch (e) {
-    error.value = e
-    duration.value = 0
     throw e
   }
   finally {
     if (fetchingTimer)
       clearTimeout(fetchingTimer)
     isFetching.value = false
-  }
-}
-
-function highlight() {
-  if (highlighter) {
-    const start = performance.now()
-    const result = highlighter.codeToHtml(input.value, {
-      lang: grammar.value,
-      theme: theme.value,
-    })
-    const end = performance.now()
-    duration.value = end - start
-    output.value = result
   }
 }
 
@@ -132,30 +116,27 @@ function openFile(filename: string) {
     a.click()
   }
 }
-
 function openSample() {
-  openFile(`../samples/${grammar.value}.sample`)
+  openFile(`../samples/${language.value}.sample`)
 }
-
-function openGrammar(name = grammar.value) {
+function openGrammar(name = language.value) {
   openFile(`../packages/tm-grammars/grammars/${name}.json`)
 }
-
 function openTheme() {
-  openFile(`../packages/tm-themes/themes/${theme.value}.json`)
+  openFile(`../packages/themes/src/themes/${theme.value}.ts`)
 }
 
 function random() {
   const g = grammars[Math.floor(Math.random() * grammars.length)]
   const t = themes[Math.floor(Math.random() * themes.length)]
-  grammar.value = g.name
+  language.value = g.name
   theme.value = t.name
 }
 
 function share() {
   clipboard.copy(new URL(`?${new URLSearchParams({
     theme: theme.value,
-    grammar: grammar.value,
+    grammar: language.value,
   })}`, location.href).href)
   copied.value = true
   setTimeout(() => {
@@ -164,10 +145,10 @@ function share() {
 }
 
 watch(
-  [theme, grammar],
+  [theme, language],
   (n, o) => {
     params.theme = theme.value
-    params.grammar = grammar.value
+    params.language = language.value
     const grammarChanged = o[1] !== n[1]
     const isFirstTime = !o[0]
     // Fetch example when grammar changes, or the first load without params
@@ -175,11 +156,24 @@ watch(
   },
   { immediate: true },
 )
+watch(theme, (theme) => {
+  if (!theme) {
+    return
+  }
+
+  import('shikimirror/themes').then(themes => {
+    const themeExtension = themes[camelCase(theme)] as Extension
+    !!themeExtension &&  editor.value?.dispatch({
+      effects: themeConfig.reconfigure(themeExtension)
+    })
+  })
+}, {
+  immediate:true
+})
 
 watch(
   input,
   () => {
-    highlight()
     if (input.value !== example.value)
       params.code = input.value
     else
@@ -191,7 +185,7 @@ watch(
 // @ts-expect-error DEFINE
 const version = __VERSION__
 
-useTitle(() => `${grammarObject.value?.displayName || grammar.value} - ${themeObject.value?.displayName || theme.value} - TextMate Playground`)
+useTitle('Shikimirror Playground')
 
 if (import.meta.hot) {
   import.meta.hot.accept(() => {
@@ -204,11 +198,12 @@ if (import.meta.hot) {
   <div h-100vh w-full grid="~ rows-[max-content_1fr]">
     <div flex="~ items-center gap-2" px4 pt-4>
       <a href="https://github.com/shikijs/textmate-grammars-themes" target="_blank" text-lg hover="text-primary">
-       Shikimirror with CodeMirror Playground
+        Shikimirror with CodeMirror Playground
       </a>
       <Badge :text="`shikimirror v${version}`" text-sm :color="160" />
       <div flex-auto />
-      <a border="~ base rounded" p2 hover="bg-active" href="https://github.com/shikijs/textmate-grammars-themes" target="_blank">
+      <a border="~ base rounded" p2 hover="bg-active" href="https://github.com/shikijs/textmate-grammars-themes"
+         target="_blank">
         <div i-carbon-logo-github />
       </a>
       <button border="~ base rounded" p2 hover="bg-active" title="Reset" @click="run()">
@@ -229,21 +224,19 @@ if (import.meta.hot) {
       <div h-full of-auto flex="~ col gap-4">
         <div relative border="~ base rounded">
           <input
-            v-model="searchInputGrammar"
-            placeholder="Search" px3
-            py1 pl8 bg-transparent sticky top-0 w-full
-          >
+                 v-model="searchInputLanguage"
+                 placeholder="Search" px3
+                 py1 pl8 bg-transparent sticky top-0 w-full>
           <div i-carbon-search absolute left-2 top-2 op40 z--1 />
         </div>
         <div h-full of-auto flex="~ col" border="~ base rounded">
           <button
-            v-for="g of filteredGrammars"
-            :key="g.name"
-            border="b base" px3
-            py1 text-left
-            :class="g.name === grammar ? 'bg-active text-primary' : 'text-faded'"
-            @click="grammar = g.name"
-          >
+                  v-for="g of filteredLanguage"
+                  :key="g.name"
+                  border="b base" px3
+                  py1 text-left
+                  :class="g.name === language ? 'bg-active text-primary' : 'text-faded'"
+                  @click="language = g.name">
             {{ g.displayName }}
           </button>
         </div>
@@ -252,20 +245,18 @@ if (import.meta.hot) {
       <div h-full of-auto flex="~ col gap-4">
         <div relative border="~ base rounded">
           <input
-            v-model="searchInputTheme"
-            placeholder="Search" px3
-            py1 pl8 bg-transparent sticky top-0 w-full
-          >
+                 v-model="searchInputTheme"
+                 placeholder="Search" px3
+                 py1 pl8 bg-transparent sticky top-0 w-full>
           <div i-carbon-search absolute left-2 top-2 op40 z--1 />
         </div>
         <div h-full of-auto flex="~ col" border="~ base rounded">
           <button
-            v-for="t of filteredThemes"
-            :key="t.name"
-            border="b base" px3 py1 text-left
-            :class="t.name === theme ? 'bg-active text-purple' : 'text-faded'"
-            @click="theme = t.name"
-          >
+                  v-for="t of filteredThemes"
+                  :key="t.name"
+                  border="b base" px3 py1 text-left
+                  :class="t.name === theme ? 'bg-active text-purple' : 'text-faded'"
+                  @click="theme = t.name">
             {{ t.displayName }}
           </button>
         </div>
@@ -280,28 +271,7 @@ if (import.meta.hot) {
             <div>
               <div flex="~ items-center gap-2">
                 <button text-left @click="openGrammar()">
-                  <code>{{ grammar }}</code>
-                </button>
-                <!-- TODO: Add funding links -->
-                <!-- <div text-xs>
-                  <span v-for="(link, index) in grammarObject?.funding" :key="index">
-                    <a :href="link.url" target="_blank" hover="text-pink" flex="~ items-center gap-1">
-                      <div i-carbon-favorite /> <b>{{ link.handle || link.name }}</b>
-                    </a>
-                  </span>
-                </div> -->
-              </div>
-              <div v-if="embedded.length < 15" flex="~ col" ml-2 border="l base">
-                <div v-for="e in embedded" :key="e" flex="~ items-center gap-2">
-                  <div w-4 border="t base" h-1px flex-none />
-                  <button text-left op75 @click="openGrammar(e)">
-                    <code>{{ e }}</code>
-                  </button>
-                </div>
-              </div>
-              <div v-else flex="~ wrap gap-x-2 gap-y-1" ml-2 border="l base" px4 py1 pb2>
-                <button v-for="e in embedded" :key="e" text-left op75 @click="openGrammar(e)">
-                  <code>{{ e }}</code>
+                  <code>{{ language }}</code>
                 </button>
               </div>
             </div>
@@ -313,14 +283,6 @@ if (import.meta.hot) {
                 <button text-left @click="openTheme()">
                   <code>{{ theme }}</code>
                 </button>
-                <!-- TODO: Add funding links -->
-                <!-- <div text-xs>
-                  <span v-for="(link, index) in grammarObject?.funding" :key="index">
-                    <a :href="link.url" target="_blank" hover="text-pink" flex="~ items-center gap-1">
-                      <div i-carbon-favorite /> <b>{{ link.handle || link.name }}</b>
-                    </a>
-                  </span>
-                </div> -->
               </div>
             </div>
             <div text-right op50>
@@ -328,47 +290,17 @@ if (import.meta.hot) {
             </div>
             <button text-left @click="openSample()">
               <code>
-                {{ grammar }}.sample
+                {{ language }}.sample
               </code>
             </button>
-            <template v-if="grammarObject?.aliases?.length">
-              <div text-right op50>
-                Aliases
-              </div>
-              <div flex="~ gap-2">
-                <code v-for="a in grammarObject?.aliases" :key="a">
-                  {{ a }}
-                </code>
-              </div>
-            </template>
           </div>
         </div>
 
-        <div v-if="error" text-red bg-red:10 p4 rounded flex-none>
-          {{ error }}
-        </div>
-        <div v-if="output && !error" relative of-x-scroll flex-none>
-          <div
-            transition-all duration-500 :class="isFetching ? 'blur-3px' : ''"
-            v-html="output"
-          />
-          <textarea
-            id="input"
-            v-model="input"
-            class="absolute top-0 left-0 inset-0 caret-gray w-full h-full resize-none of-hidden p4 bg-transparent z-1 font-mono text-transparent"
-            spellcheck="false"
-          />
-        </div>
-        <div
-          v-if="isFetching"
-          text-amber bg-amber:10 px4 py3 border="~ amber/50 rounded" animate-pulse
-          flex="~ items-center gap-2 none"
-        >
+        <div ref="editorContainer" class="of-x-scroll flex-none"></div>
+        <div v-if="isFetching" text-amber bg-amber:10 px4 py3 border="~ amber/50 rounded" animate-pulse
+             flex="~ items-center gap-2 none">
           <div i-svg-spinners-270-ring-with-bg />
           Loading...
-        </div>
-        <div v-else-if="duration" op50 text-sm text-right mr-1>
-          Highlighting finished in <code font-bold>{{ duration.toFixed(2) }}ms</code>
         </div>
       </div>
     </div>
@@ -379,10 +311,13 @@ if (import.meta.hot) {
 :root {
   color-scheme: light;
 }
+
 :root.dark {
   color-scheme: dark;
 }
-.shiki, #input {
+
+.shiki,
+#input {
   font-size: 14px;
   line-height: 1.5;
   padding: 10px;
@@ -390,9 +325,11 @@ if (import.meta.hot) {
   white-space: pre;
   --uno: border border-base rounded p4;
 }
+
 .panel-info button {
   --uno: hover-text-primary hover-underline hover:op100;
 }
+
 pre code {
   --uno: font-mono;
 }

@@ -30,8 +30,8 @@
     "build": "vite build"
   },
   "peerDependencies": {
-    "@codemirror/state": "^6",
-    "@codemirror/view": "^6"
+    "@codemirror/state": "catalog:",
+    "@codemirror/view": "catalog:"
   },
   "devDependencies": {
     "@types/fs-extra": "catalog:",
@@ -39,7 +39,7 @@
     "fs-extra": "catalog:",
     "jiti": "catalog:",
     "unplugin-external": "catalog:",
-    "usexx": "^0.1.0",
+    "usexx": "catalog:",
     "vite": "catalog:",
     "vite-plugin-dts": "catalog:"
   }

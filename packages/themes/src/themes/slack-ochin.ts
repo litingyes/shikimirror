@@ -1,9 +1,11 @@
 import { EditorView } from '@codemirror/view'
 
-export const slackOchinTheme = EditorView.theme({
+export const slackOchin = EditorView.theme({
   '&': {
     color: '#000',
-    backgroundColor: '#000',
+    backgroundColor: '#FFF',
+  },
+  '& .cm-selectionBackground': {
   },
 }, {
   dark: false,

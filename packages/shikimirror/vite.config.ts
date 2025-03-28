@@ -5,9 +5,9 @@ import dts from 'vite-plugin-dts'
 export default defineConfig({
   build: {
     lib: {
-      entry: './src/index.ts',
+      entry: ['./src/index.ts', './src/themes.ts'],
       formats: ['es'],
-      fileName: 'index',
+      fileName: (_, name) => `${name}.js`,
     },
   },
   plugins: [

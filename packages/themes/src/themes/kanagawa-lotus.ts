@@ -1,9 +1,12 @@
 import { EditorView } from '@codemirror/view'
 
-export const kanagawaLotusTheme = EditorView.theme({
+export const kanagawaLotus = EditorView.theme({
   '&': {
     color: '#545464',
-    backgroundColor: '#545464',
+    backgroundColor: '#F2ECBC',
+  },
+  '& .cm-selectionBackground': {
+    background: '#E4D79480',
   },
 }, {
   dark: false,

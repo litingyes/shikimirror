@@ -1,9 +1,12 @@
 import { EditorView } from '@codemirror/view'
 
-export const auroraXTheme = EditorView.theme({
+export const auroraX = EditorView.theme({
   '&': {
-    color: 'undefined',
-    backgroundColor: 'undefined',
+    color: '#576daf',
+    backgroundColor: '#07090F',
+  },
+  '& .cm-selectionBackground': {
+    background: '#262E47',
   },
 }, {
   dark: true,

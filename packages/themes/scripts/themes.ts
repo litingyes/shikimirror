@@ -2,13 +2,27 @@ import { resolve } from 'node:path'
 import { destr } from 'destr'
 import { emptyDirSync, readJSONSync, writeFileSync } from 'fs-extra'
 import { themes } from 'tm-themes'
-import { camelCase } from 'usexx'
+import { camelCase, isArray } from 'usexx'
 
 interface TextMateTheme {
-  colors?: {
-    'editor.background'?: string
-    'editor.foreground'?: string
+  colors?: Record<string, string>
+}
+
+function genKV(key: string, value?: string | Array<string | undefined>) {
+  if (!value) {
+    return ''
   }
+
+  if (isArray(value)) {
+    for (let i = 0; i < value.length; i++) {
+      if (value[i]) {
+        return `${key}: "${value[i]}",`
+      }
+    }
+    return ''
+  }
+
+  return `${key}: "${value}",`
 }
 
 function main() {
@@ -23,15 +37,18 @@ function main() {
     const codeMirrorThemeContent = `import { EditorView } from "@codemirror/view"
 import { Extension } from "@codemirror/state"
 
-export const ${camelCase(theme.name)}Theme = EditorView.theme({
+export const ${camelCase(theme.name)} = EditorView.theme({
     "&": {
-      color: "${data.colors?.['editor.foreground']}",
-      backgroundColor: "${data.colors?.['editor.foreground']}"
-    }
+      ${genKV('color', [data.colors?.['editor.foreground'], data.colors?.foreground])}
+      ${genKV('backgroundColor', data.colors?.['editor.background'])}
+    },
+    "& .cm-selectionBackground": {
+      ${genKV('background', data.colors?.['editor.selectionHighlightBackground'])}
+    },
 }, {
     dark: ${theme.type === 'dark'}
 })
-`
+`.split('\n').filter(line => !!line.trim()).join('\n')
 
     writeFileSync(resolve(outputDir, `${theme.name}.ts`), codeMirrorThemeContent, 'utf-8')
 

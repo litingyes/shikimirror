@@ -8,10 +8,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/state": "catalog:",
+    "@codemirror/view": "catalog:",
     "@vueuse/core": "^13.0.0",
-    "shiki": "catalog:",
+    "codemirror": "^6.0.1",
+    "shikimirror": "workspace:*",
     "tm-grammars": "catalog:",
     "tm-themes": "catalog:",
+    "usexx": "catalog:",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
