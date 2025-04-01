@@ -25,8 +25,8 @@ catalogs:
       specifier: ^2.4.2
       version: 2.4.2
     tm-grammars:
-      specifier: ^1.23.6
-      version: 1.23.6
+      specifier: ^1.23.7
+      version: 1.23.7
     tm-themes:
       specifier: ^1.10.2
       version: 1.10.2
@@ -156,7 +156,7 @@ importers:
         version: link:../packages/shikimirror
       tm-grammars:
         specifier: 'catalog:'
-        version: 1.23.6
+        version: 1.23.7
       tm-themes:
         specifier: 'catalog:'
         version: 1.10.2
@@ -3687,8 +3687,8 @@ packages:
     resolution: {integrity: sha512-n1cw8k1k0x4pgA2+9XrOkFydTerNcJ1zWCO5Nn9scWHTD+5tp8dghT2x1uduQePZTZgd3Tupf+x9BxJjeJi77Q==}
     engines: {node: '>=14.0.0'}
 
-  tm-grammars@1.23.6:
-    resolution: {integrity: sha512-Br5J6lpxDnA2f5pjDRTMdmtaV5ylOOyzM9OBHrloB15g6FarlIkqU/3aoBT7he/CqsB5y8k21DKuIal7aEq/iA==}
+  tm-grammars@1.23.7:
+    resolution: {integrity: sha512-jrtCF2+/hNKsmoqrwYoir4mB8qZDMN9w9ho6QQx9U9Edqy32Dktpyw8hS+OEUBsSTypdQUtSYNQEdAKpIuQXhQ==}
 
   tm-themes@1.10.2:
     resolution: {integrity: sha512-/k5oHcHbQrbmB5IPbekMIFYYPC3pbWl8WRRKWFOG4o3OOcyUJNB9li2sA0TaWwqaEjGOesmaD569TO/8rmr+Fg==}
@@ -8153,7 +8153,7 @@ snapshots:
   tinyspy@3.0.2:
     optional: true
 
-  tm-grammars@1.23.6: {}
+  tm-grammars@1.23.7: {}
 
   tm-themes@1.10.2: {}
 
