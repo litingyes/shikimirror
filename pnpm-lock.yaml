@@ -28,8 +28,8 @@ catalogs:
       specifier: ^1.23.6
       version: 1.23.6
     tm-themes:
-      specifier: ^1.10.2
-      version: 1.10.2
+      specifier: ^1.10.5
+      version: 1.10.5
     unplugin-external:
       specifier: 0.1.0-beta.3
       version: 0.1.0-beta.3
@@ -159,7 +159,7 @@ importers:
         version: 1.23.6
       tm-themes:
         specifier: 'catalog:'
-        version: 1.10.2
+        version: 1.10.5
       usexx:
         specifier: 'catalog:'
         version: 0.1.0
@@ -3690,8 +3690,8 @@ packages:
   tm-grammars@1.23.6:
     resolution: {integrity: sha512-Br5J6lpxDnA2f5pjDRTMdmtaV5ylOOyzM9OBHrloB15g6FarlIkqU/3aoBT7he/CqsB5y8k21DKuIal7aEq/iA==}
 
-  tm-themes@1.10.2:
-    resolution: {integrity: sha512-/k5oHcHbQrbmB5IPbekMIFYYPC3pbWl8WRRKWFOG4o3OOcyUJNB9li2sA0TaWwqaEjGOesmaD569TO/8rmr+Fg==}
+  tm-themes@1.10.5:
+    resolution: {integrity: sha512-/2auLAWQK4LDB61o1+N0/YXtY/3KLCoGV0xX7ZLKuWSc5Z4si3N/BZIqRp+oXOR4SnZsD51OkdOmi/NoUcGvpg==}
 
   tmp@0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
@@ -3924,6 +3924,7 @@ packages:
 
   vite-plugin-dts@4.5.1:
     resolution: {integrity: sha512-Yo1dHT05B2nD47AVB7b0+wK1FPFpJJnUf/muRF7+tP+sbPFRhLs70TTRGwJw7NDBwAUAmSwhrD+ZPTe4P6Wv9w==}
+    deprecated: This version has some issues. Please upgrade to v4.5.3.
     peerDependencies:
       typescript: '*'
       vite: '*'
@@ -8155,7 +8156,7 @@ snapshots:
 
   tm-grammars@1.23.6: {}
 
-  tm-themes@1.10.2: {}
+  tm-themes@1.10.5: {}
 
   tmp@0.0.33:
     dependencies:
