@@ -25,8 +25,8 @@ catalogs:
       specifier: ^2.4.2
       version: 2.4.2
     tm-grammars:
-      specifier: ^1.23.6
-      version: 1.23.6
+      specifier: ^1.23.16
+      version: 1.23.16
     tm-themes:
       specifier: ^1.10.2
       version: 1.10.2
@@ -156,7 +156,7 @@ importers:
         version: link:../packages/shikimirror
       tm-grammars:
         specifier: 'catalog:'
-        version: 1.23.6
+        version: 1.23.16
       tm-themes:
         specifier: 'catalog:'
         version: 1.10.2
@@ -3687,8 +3687,8 @@ packages:
     resolution: {integrity: sha512-n1cw8k1k0x4pgA2+9XrOkFydTerNcJ1zWCO5Nn9scWHTD+5tp8dghT2x1uduQePZTZgd3Tupf+x9BxJjeJi77Q==}
     engines: {node: '>=14.0.0'}
 
-  tm-grammars@1.23.6:
-    resolution: {integrity: sha512-Br5J6lpxDnA2f5pjDRTMdmtaV5ylOOyzM9OBHrloB15g6FarlIkqU/3aoBT7he/CqsB5y8k21DKuIal7aEq/iA==}
+  tm-grammars@1.23.16:
+    resolution: {integrity: sha512-hP6vMwozuL77p5Ud7YnrqDC/FT8hyptv/u7CdSrOGO+R59hAqrs3OxuejVft3jN7GzohNyYbcfNpsGLsVQSrTA==}
 
   tm-themes@1.10.2:
     resolution: {integrity: sha512-/k5oHcHbQrbmB5IPbekMIFYYPC3pbWl8WRRKWFOG4o3OOcyUJNB9li2sA0TaWwqaEjGOesmaD569TO/8rmr+Fg==}
@@ -3924,6 +3924,7 @@ packages:
 
   vite-plugin-dts@4.5.1:
     resolution: {integrity: sha512-Yo1dHT05B2nD47AVB7b0+wK1FPFpJJnUf/muRF7+tP+sbPFRhLs70TTRGwJw7NDBwAUAmSwhrD+ZPTe4P6Wv9w==}
+    deprecated: This version has some issues. Please upgrade to v4.5.3.
     peerDependencies:
       typescript: '*'
       vite: '*'
@@ -8153,7 +8154,7 @@ snapshots:
   tinyspy@3.0.2:
     optional: true
 
-  tm-grammars@1.23.6: {}
+  tm-grammars@1.23.16: {}
 
   tm-themes@1.10.2: {}
 
