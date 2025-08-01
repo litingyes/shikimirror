@@ -9,7 +9,7 @@ catalog:
   fs-extra: ^11.3.0
   jiti: ^2.4.2
   shiki: 3.2.1
-  tm-grammars: ^1.23.6
+  tm-grammars: ^1.23.26
   tm-themes: ^1.10.2
   unplugin-external: 0.1.0-beta.3
   usexx: ^0.1.0
