@@ -33,6 +33,6 @@
     "unplugin-vue-macros": "^2.14.5",
     "unplugin-vue-router": "^0.12.0",
     "vite": "catalog:",
-    "vue-tsc": "^2.2.8"
+    "vue-tsc": "^2.2.12"
   }
 }
